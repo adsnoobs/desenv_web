@@ -16,7 +16,6 @@ namespace BancoDeDados
         public virtual DbSet<Conta> Contas { get; set; }
         public virtual DbSet<Categoria> Categorias { get; set; }
         public virtual DbSet<TipoMovimento> TiposMovimento { get; set; }
-        public virtual DbSet<Extrato> Extratos { get; set; }
         public virtual DbSet<Movimento> Movimentos { get; set; }
     }
 }
