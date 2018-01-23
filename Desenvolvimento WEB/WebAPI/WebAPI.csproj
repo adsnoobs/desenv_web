@@ -159,7 +159,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="Controllers\ContaController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -213,6 +213,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BancoDeDados\BancoDeDados.csproj">
+      <Project>{04c9b34c-29f2-4cd0-95ee-e85d64e994ed}</Project>
+      <Name>BancoDeDados</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RegraDeNegocio\RegraDeNegocio.csproj">
+      <Project>{3f46db63-9421-4d84-b35b-17cfdfc8d9bc}</Project>
+      <Name>RegraDeNegocio</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
