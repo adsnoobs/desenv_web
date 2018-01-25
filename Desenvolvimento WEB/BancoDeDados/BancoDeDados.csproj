@@ -48,13 +48,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BDContext.cs" />
-    <Compile Include="Categoria.cs" />
-    <Compile Include="Conta.cs" />
-    <Compile Include="Extrato.cs" />
-    <Compile Include="ExtratoCategoria.cs" />
-    <Compile Include="Movimento.cs" />
+    <Compile Include="DB\Categoria.cs" />
+    <Compile Include="DB\Conta.cs" />
+    <Compile Include="DB\Extrato.cs" />
+    <Compile Include="DB\ExtratoCategoria.cs" />
+    <Compile Include="DB\Movimento.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TipoMovimento.cs" />
+    <Compile Include="DB\TipoMovimento.cs" />
+    <Compile Include="View\ADSResposta.cs" />
+    <Compile Include="View\ContaView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

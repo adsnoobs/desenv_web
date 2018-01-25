@@ -18,26 +18,23 @@ namespace WebAPI.Controllers
             dynamic json = jsonData;
             int codigo = json.Codigo;
 
-            Conta resposta = new ContaNegocio().PegaPorCodigo(codigo);
+            var resposta = new ContaNegocio().PegaPorCodigo(codigo);
 
-            if (resposta == null) return NotFound();
+            if (resposta == null) return Ok(new ADSResposta(false, "Conta não encontrada.", resposta));
 
-            return Ok(new { resposta.Codigo, resposta.Descricao });
+            return Ok(new ADSResposta(true, "", resposta));
         }
 
         [HttpPost]
         [ActionName("obtem")]
         public async Task<IHttpActionResult> Obtem()
         {
-            var resposta = new ContaNegocio().PegaTodas()
-                .Select(s => new
-                {
-                    s.Codigo,
-                    s.Descricao
-                })
-                .ToList();
+            var resposta = new ContaNegocio().PegaTodas();
 
-            if (resposta == null || resposta.Count == 0) return NotFound();
+            if (resposta == null || resposta.Count == 0)
+            {
+                return Ok(new ADSResposta(false, "Nenhum registro encontrado.", resposta));
+            }
 
             return Ok(resposta);
         }
@@ -46,16 +43,18 @@ namespace WebAPI.Controllers
         [ActionName("salvar")]
         public async Task<IHttpActionResult> Salvar([FromBody] JObject jsonData)
         {
-            Conta conta = jsonData.SelectToken("conta").ToObject<Conta>();
+            ContaView conta = jsonData.SelectToken("Conta").ToObject<ContaView>();
 
-            if (new ContaNegocio().Salvar(conta))
-            {
-                return Ok(conta);
-            }
-            else
-            {
-                return InternalServerError();
-            }
+            return Ok((new ContaNegocio().Salvar(conta)));
+        }
+
+        [HttpPost]
+        [ActionName("excluir")]
+        public async Task<IHttpActionResult> Excluir([FromBody] JObject jsonData)
+        {
+            ContaView conta = jsonData.SelectToken("Conta").ToObject<ContaView>();
+
+            return Ok((new ContaNegocio().Excluir(conta)));
         }
     }
 }

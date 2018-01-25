@@ -8,7 +8,12 @@
 
         public static BDContext InstanciaDoBanco()
         {
-            return ctx ?? new BDContext();
+            if (ctx == null)
+            {
+                ctx = new BDContext();
+            }
+
+            return ctx;
         }
 
         public static BDContext NovaInstanciaDoBanco()

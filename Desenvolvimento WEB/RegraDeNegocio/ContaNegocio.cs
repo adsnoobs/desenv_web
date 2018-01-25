@@ -10,7 +10,7 @@ namespace RegraDeNegocio
 
     public class ContaNegocio
     {
-        public bool Salvar(Conta c)
+        public ADSResposta Salvar(ContaView c)
         {
             var db = DBCore.InstanciaDoBanco();
 
@@ -24,7 +24,7 @@ namespace RegraDeNegocio
             else
             {
                 novo = db.Contas.Create();
-                novo.Descricao = c.Descricao;
+                novo.Descricao = c.Descricao;                
 
                 db.Contas.Add(novo);
             }
@@ -33,44 +33,77 @@ namespace RegraDeNegocio
             {
                 db.SaveChanges();
 
-                return true;
+                c.Codigo = novo.Codigo;
+
+                return new ADSResposta(true, "", c);
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                return new ADSResposta(false, ex.Message, c);
             }
         }
 
-        public bool Excluir(Conta c)
+        public ADSResposta Excluir(ContaView c)
         {
             try
             {
                 using (var db = DBCore.NovaInstanciaDoBanco())
                 {
                     var conta = db.Contas.Where(w => w.Codigo.Equals(c.Codigo)).FirstOrDefault();
+
+                    if (conta == null)
+                    {
+                        return new ADSResposta(sucesso: false, mensagem: "Conta não encontrada.", objeto: c);
+                    }
+
                     db.Contas.Remove(conta);
 
                     db.SaveChanges();
 
-                    return true;
+                    return new ADSResposta(sucesso:true, objeto: conta);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                return new ADSResposta(false, ex.Message, c);
             }
         }
 
-        public List<Conta> PegaTodas()
+        public List<ContaView> PegaTodas()
         {
-            return DBCore.InstanciaDoBanco().Contas.ToList();
+            var contas = DBCore.InstanciaDoBanco().Contas.ToList();
+
+            var resposta = new List<ContaView>();
+            foreach(var c in contas)
+            {
+                resposta.Add(new ContaView
+                {
+                    Codigo = c.Codigo,
+                    Descricao = c.Descricao
+                });
+            }
+
+            return resposta;
         }
 
-        public Conta PegaPorCodigo(int id)
+        public ContaView PegaPorCodigo(int id)
         {
-            return DBCore.InstanciaDoBanco().Contas
+            var conta = DBCore.InstanciaDoBanco().Contas
                 .Where(w => w.Codigo.Equals(id))
                 .FirstOrDefault();
+
+            ContaView resposta = null;
+
+            if (conta != null)
+            {
+                resposta = new ContaView
+                {
+                    Codigo = conta.Codigo,
+                    Descricao = conta.Descricao
+                };
+            }
+
+            return resposta;
         }
     }
 }
