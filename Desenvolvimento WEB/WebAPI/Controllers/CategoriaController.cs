@@ -6,8 +6,8 @@ using System.Web.Http;
 
 namespace WebAPI.Controllers
 {
-    [RoutePrefix("conta")]
-    public class ContaController : ApiController
+    [RoutePrefix("categoria")]
+    public class CategoriaController : ApiController
     {
         [HttpPost]
         [ActionName("obtemporcodigo")]
@@ -16,18 +16,18 @@ namespace WebAPI.Controllers
             dynamic json = jsonData;
             int codigo = json.Codigo;
 
-            var resposta = new ContaNegocio().PegaPorCodigo(codigo);
+            var resposta = new CategoriaNegocio().PegaPorCodigo(codigo);
 
-            if (resposta == null) return Ok(new ADSResposta(false, "Conta não encontrada.", resposta));
+            if (resposta == null) return Ok(new ADSResposta(false, "Categoria não encontrada.", resposta));
 
-            return Ok(new ADSResposta(true, "", resposta));
+            return Ok(new ADSResposta(true, objeto :resposta));
         }
 
         [HttpPost]
         [ActionName("obtem")]
         public async Task<IHttpActionResult> Obtem()
         {
-            var resposta = new ContaNegocio().PegaTodas();
+            var resposta = new CategoriaNegocio().PegaTodas();
 
             if (resposta == null || resposta.Count == 0)
             {
@@ -41,18 +41,18 @@ namespace WebAPI.Controllers
         [ActionName("salvar")]
         public async Task<IHttpActionResult> Salvar([FromBody] JObject jsonData)
         {
-            ContaView conta = jsonData.SelectToken("Conta").ToObject<ContaView>();
+            CategoriaView categoria = jsonData.SelectToken("Categoria").ToObject<CategoriaView>();
 
-            return Ok((new ContaNegocio().Salvar(conta)));
+            return Ok((new CategoriaNegocio().Salvar(categoria)));
         }
 
         [HttpPost]
         [ActionName("excluir")]
         public async Task<IHttpActionResult> Excluir([FromBody] JObject jsonData)
         {
-            ContaView conta = jsonData.SelectToken("Conta").ToObject<ContaView>();
+            CategoriaView categoria = jsonData.SelectToken("Categoria").ToObject<CategoriaView>();
 
-            return Ok((new ContaNegocio().Excluir(conta)));
+            return Ok((new CategoriaNegocio().Excluir(categoria)));
         }
     }
 }

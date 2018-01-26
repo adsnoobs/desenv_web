@@ -6,8 +6,8 @@ using System.Web.Http;
 
 namespace WebAPI.Controllers
 {
-    [RoutePrefix("conta")]
-    public class ContaController : ApiController
+    [RoutePrefix("tipomovimento")]
+    public class TipoMovimentoController : ApiController
     {
         [HttpPost]
         [ActionName("obtemporcodigo")]
@@ -16,18 +16,18 @@ namespace WebAPI.Controllers
             dynamic json = jsonData;
             int codigo = json.Codigo;
 
-            var resposta = new ContaNegocio().PegaPorCodigo(codigo);
+            var resposta = new TipoMovimentoNegocio().PegaPorCodigo(codigo);
 
-            if (resposta == null) return Ok(new ADSResposta(false, "Conta não encontrada.", resposta));
+            if (resposta == null) return Ok(new ADSResposta(false, "Tipo de Movimento não encontrado.", resposta));
 
-            return Ok(new ADSResposta(true, "", resposta));
+            return Ok(new ADSResposta(true, objeto: resposta));
         }
 
         [HttpPost]
         [ActionName("obtem")]
         public async Task<IHttpActionResult> Obtem()
         {
-            var resposta = new ContaNegocio().PegaTodas();
+            var resposta = new TipoMovimentoNegocio().PegaTodas();
 
             if (resposta == null || resposta.Count == 0)
             {
@@ -41,18 +41,18 @@ namespace WebAPI.Controllers
         [ActionName("salvar")]
         public async Task<IHttpActionResult> Salvar([FromBody] JObject jsonData)
         {
-            ContaView conta = jsonData.SelectToken("Conta").ToObject<ContaView>();
+            TipoMovimentoView objeto = jsonData.SelectToken("TipoMovimento").ToObject<TipoMovimentoView>();
 
-            return Ok((new ContaNegocio().Salvar(conta)));
+            return Ok((new TipoMovimentoNegocio().Salvar(objeto)));
         }
 
         [HttpPost]
         [ActionName("excluir")]
         public async Task<IHttpActionResult> Excluir([FromBody] JObject jsonData)
         {
-            ContaView conta = jsonData.SelectToken("Conta").ToObject<ContaView>();
+            TipoMovimentoView objeto = jsonData.SelectToken("TipoMovimento").ToObject<TipoMovimentoView>();
 
-            return Ok((new ContaNegocio().Excluir(conta)));
+            return Ok((new TipoMovimentoNegocio().Excluir(objeto)));
         }
     }
 }

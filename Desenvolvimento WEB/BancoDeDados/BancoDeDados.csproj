@@ -56,7 +56,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DB\TipoMovimento.cs" />
     <Compile Include="View\ADSResposta.cs" />
+    <Compile Include="View\CategoriaView.cs" />
     <Compile Include="View\ContaView.cs" />
+    <Compile Include="View\TipoMovimentoView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
