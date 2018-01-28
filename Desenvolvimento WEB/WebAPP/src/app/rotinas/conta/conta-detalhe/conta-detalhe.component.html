@@ -1,0 +1,24 @@
+<form #formPadrao="ngForm">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="codigo">Código</label>
+                <input required type="text" disabled id="codigo" autocomplete="off" class="form-control" [(ngModel)]="contaEdicao.Codigo"
+                    name="codigo">
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="form-group">
+                <label for="descricao">Descrição</label>
+                <input required type="text" id="descricao" autocomplete="off" class="form-control" [(ngModel)]="contaEdicao.Descricao" name="descricao">
+            </div>
+        </div>
+    </div>
+</form>
+<div class="row">
+    <div class="col-md-12">
+        <button (click)="salvar($event)" type="button" [disabled]="!formPadrao.valid" class="btn btn-outline-success">Salvar</button>
+        <button (click)="excluir($event)" type="button" [disabled]="!editando" class="btn btn-outline-danger">Excluir</button>
+        <button (click)="cancelar($event)" type="button" class="btn btn-outline-warning">Cancelar</button>
+    </div>
+</div>

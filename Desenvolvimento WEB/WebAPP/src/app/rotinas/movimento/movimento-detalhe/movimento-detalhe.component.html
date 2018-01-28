@@ -1,0 +1,74 @@
+<form #formPadrao="ngForm">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="codigo">Código</label>
+                <input required type="text" disabled id="codigo" autocomplete="off" class="form-control" [(ngModel)]="movimentoEdicao.Codigo"
+                    name="codigo">
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="form-group">
+                <label for="descricao">Descrição</label>
+                <input required type="text" id="descricao" autocomplete="off" class="form-control" [(ngModel)]="movimentoEdicao.Descricao"
+                    name="descricao">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="tipomovimento">Tipo movimento</label>
+                <select required name="tipomovimento" class="form-control" id="tipomovimento" [(ngModel)]="movimentoEdicao.TipoMovimentoCodigo">
+                    <option value="">Selecione um tipo de movimento</option>
+                    <option *ngFor="let tipo of tiposMovimento" [value]="tipo.Codigo" [attr.selected]="(tipo.Codigo == movimentoEdicao.TipoMovimentoCodigo ? true : null )">{{ tipo.Codigo }} - {{ tipo.Descricao }}</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="conta">Conta</label>
+                <select required name="conta" class="form-control" id="conta" [(ngModel)]="movimentoEdicao.ContaCodigo">
+                    <option value="">Selecione uma conta</option>
+                    <option *ngFor="let conta of contas" [value]="conta.Codigo" [attr.selected]="(conta.Codigo == movimentoEdicao.ContaCodigo ? true : null )">{{ conta.Codigo }} - {{ conta.Descricao }}</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="categoria">Categoria</label>
+                <select required name="categoria" class="form-control" id="categoria" [(ngModel)]="movimentoEdicao.CategoriaCodigo">
+                    <option value="">Selecione uma categoria</option>
+                    <option *ngFor="let categoria of categorias" [value]="categoria.Codigo" [attr.selected]="(categoria.Codigo == movimentoEdicao.CategoriaCodigo ? true : null )">{{ categoria.Codigo }} - {{ categoria.Descricao }}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="data">Data</label>
+                <input required type="date" id="data" autocomplete="off" class="form-control" [(ngModel)]="movimentoEdicao.Data" name="data">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="valor">Valor</label>
+                <input required type="number" id="valor" autocomplete="off" class="form-control" [(ngModel)]="movimentoEdicao.Valor" name="valor">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-check" style="margin-top:50px">
+                <input type="checkbox" id="efetivado" class="form-check-input" [(ngModel)]="movimentoEdicao.Efetivado" name="efetivado">
+                <label class="form-check-label" for="efetivado">Efetivado</label>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="row">
+    <div class="col-md-12">
+        <button (click)="salvar($event)" type="button" [disabled]="!formPadrao.valid" class="btn btn-outline-success">Salvar</button>
+        <button (click)="excluir($event)" type="button" [disabled]="!editando" class="btn btn-outline-danger">Excluir</button>
+        <button (click)="cancelar($event)" type="button" class="btn btn-outline-warning">Cancelar</button>
+    </div>
+</div>

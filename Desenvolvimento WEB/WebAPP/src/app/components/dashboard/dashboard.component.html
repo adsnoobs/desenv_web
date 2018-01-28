@@ -1,0 +1,47 @@
+<div class="row">
+  <div class="col-md-4 col-xl-3">
+    <div class="card">
+      <div class="card-body bg-danger text-white">
+        <h5 class="card-title">Despesas</h5>
+        <h6 class="card-subtitle mb-2">Total geral em aberto</h6>
+        <p class="card-text">R$
+          <strong class="valor-total">{{ dashboardResumo?.DespesasAberto || '0,00' }}</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 col-xl-3">
+    <div class="card">
+      <div class="card-body bg-warning text-white">
+        <h5 class="card-title">Receitas</h5>
+        <h6 class="card-subtitle mb-2">Total geral em aberto</h6>
+        <p class="card-text">R$
+          <strong class="valor-total">{{ dashboardResumo?.ReceitasAberto || '0,00' }}</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 col-xl-3">
+    <div class="card bg-success text-white">
+      <div class="card-body">
+        <h5 class="card-title">Saldo</h5>
+        <h6 class="card-subtitle mb-2">Total geral nas contas</h6>
+        <p class="card-text">R$
+          <strong class="valor-total">{{ dashboardResumo?.SaldoContas || '0,00' }}</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 col-xl-3">
+    <div class="card bg-primary text-white">
+      <div class="card-body">
+        <h5 class="card-title">Previsão</h5>
+        <h6 class="card-subtitle mb-2">Previsto no final do mês</h6>
+        <p class="card-text">R$
+          <strong class="valor-total">{{ dashboardResumo?.Previsao || '0,00' }}</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<!--  -->
