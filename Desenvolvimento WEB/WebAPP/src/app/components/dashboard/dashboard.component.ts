@@ -1,5 +1,6 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
+import { BaseChartDirective } from 'ng2-charts';
 
 import { GlobalService } from '../../shared/service/global-variaveis.service';
 import { DashboardService } from '../../shared/service/dashboard.service';
@@ -12,11 +13,16 @@ import { MesAno } from '../../shared/model/mes-ano.model';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-
+  @ViewChild(BaseChartDirective) chart: BaseChartDirective;
   private mesAnoAtualSubs: Subscription;
   private dashboardResumoSubs: Subscription;
-  public dashboardResumo: DashboardResumo;
+  public resumo: { dashboardResumo: DashboardResumo, categorias: { codigo: string, descricao: string, valor: number }[] };
   private mesAnoAtual: MesAno;
+
+  // Doughnut
+  public doughnutChartLabels: string[] = [];
+  public doughnutChartData: number[] = [];
+  public doughnutChartType = 'doughnut';
 
   constructor(private globalService: GlobalService, private dashboardService: DashboardService) {
     this.mesAnoAtualSubs = this.globalService.mesAnoAtual$.subscribe(
@@ -25,7 +31,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.atualizaResumos();
       }
     );
-
     this.mesAnoAtual = this.globalService.obtemMesAnoAtual();
     this.atualizaResumos();
   }
@@ -34,9 +39,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if (this.dashboardResumoSubs) {
       this.dashboardResumoSubs.unsubscribe();
     }
-    this.dashboardResumoSubs = this.dashboardService.obtemResumoMes(this.mesAnoAtual.Mes, this.mesAnoAtual.Ano).subscribe(
+    this.dashboardResumoSubs = this.dashboardService.obtemResumoMes(this.mesAnoAtual).subscribe(
       resumo => {
-        this.dashboardResumo = resumo;
+        this.resumo = resumo;
+        const valores = resumo.categorias.map<number>(m => m.valor);
+        const labels = resumo.categorias.map<string>(m => m.descricao);
+        this.doughnutChartData = (valores && valores.length > 0 ? valores : [0]);
+        this.doughnutChartLabels = (labels && labels.length > 0 ? labels : ['']);
+        setTimeout(() => {
+          if (this.chart && this.chart.chart && this.chart.chart.config) {
+              this.chart.chart.config.data.labels = labels;
+              this.chart.chart.update();
+          }
+      });
       },
       erro => alert(`Erro ao obter os dados de resumo: ${erro}`)
     );

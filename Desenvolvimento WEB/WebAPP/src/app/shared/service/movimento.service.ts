@@ -5,6 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { ServicoBaseService } from './servico-base.service';
 import { Movimento } from '../model/movimento.model';
 import { ADSResposta } from '../model/ads-resposta.model';
+import { MesAno } from './../model/mes-ano.model';
 
 @Injectable()
 export class MovimentoService extends ServicoBaseService {
@@ -18,7 +19,7 @@ export class MovimentoService extends ServicoBaseService {
                 observer.next(this.obtemPeloCodigoLocal<Movimento>('Movimento', 'Codigo', codigo));
                 observer.complete();
             }
-        )
+        );
     }
 
     public obtemLista(): Observable<Movimento[]> {
@@ -43,6 +44,29 @@ export class MovimentoService extends ServicoBaseService {
         return new Observable<ADSResposta>(
             observer => {
                 observer.next(this.salvarNaListaLocal<Movimento>('Movimento', movimento, 'Codigo'));
+                observer.complete();
+            }
+        );
+    }
+
+    public obtemListaMes(mesAno: MesAno, efetivos: string = 'T'): Observable<Movimento[]> {
+        const lista = this.obtemListaLocal<Movimento>('Movimento');
+        const listaRetorno = lista.filter((f: Movimento) => {
+            const arrData = String(f.Data).split('-');
+            const ano = Number(arrData[0]);
+            const mes = Number(arrData[1]);
+            return (
+                ano === mesAno.Ano &&
+                mes === mesAno.Mes && (
+                    efetivos === 'T' ||
+                    (efetivos === 'S' && f.Efetivado) ||
+                    (efetivos === 'N' && !f.Efetivado)
+                )
+            );
+        });
+        return new Observable<Movimento[]>(
+            observer => {
+                observer.next(listaRetorno);
                 observer.complete();
             }
         );

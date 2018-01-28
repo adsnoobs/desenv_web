@@ -1,3 +1,4 @@
+import { ChartsModule } from 'ng2-charts';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -12,7 +13,8 @@ import { Erro404Component } from './erro404/erro404.component';
     exports: [
     ],
     imports: [
-        CommonModule
+        CommonModule,
+        ChartsModule
     ]
 })
 export class ComponentsModule { }

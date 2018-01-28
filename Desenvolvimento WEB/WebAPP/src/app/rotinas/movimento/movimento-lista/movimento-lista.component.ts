@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { GlobalService } from '../../../shared/service/global-variaveis.service';
 import { Movimento } from '../../../shared/model/movimento.model';
 import { MovimentoService } from '../../../shared/service/movimento.service';
+import { MesAno } from '../../../shared/model/mes-ano.model';
 
 @Component({
     selector: 'app-movimento-lista',
@@ -13,20 +14,33 @@ import { MovimentoService } from '../../../shared/service/movimento.service';
 export class MovimentoListaComponent implements OnInit, OnDestroy {
 
     private movimentosSubs: Subscription;
+    private mesAnoAtualSubs: Subscription;
     private excluirSubs: Subscription;
     public movimentos: Movimento[] = [];
 
     constructor(private globalService: GlobalService, private movimentoService: MovimentoService, private router: Router) {
-        this.atualizarLista();
+        this.mesAnoAtualSubs = this.globalService.mesAnoAtual$.subscribe(
+            mesAno => {
+                this.atualizarLista(mesAno);
+            }
+        );
+        if (this.globalService.obtemMesAnoAtual()) {
+            this.atualizarLista(this.globalService.obtemMesAnoAtual());
+        }
     }
 
-    private atualizarLista() {
+    private atualizarLista(mesAno: MesAno) {
         if (this.movimentosSubs) {
             this.movimentosSubs.unsubscribe();
         }
         this.movimentosSubs = this.movimentoService.obtemLista().subscribe(
             movimentos => {
-                this.movimentos = movimentos;
+                this.movimentos = movimentos.filter((f: Movimento) => {
+                    const arrData = f.Data.split('-');
+                    const ano = Number(arrData[0]);
+                    const mes = Number(arrData[1]);
+                    return ano === mesAno.Ano && mes === mesAno.Mes;
+                });
             }
         );
     }
@@ -50,7 +64,7 @@ export class MovimentoListaComponent implements OnInit, OnDestroy {
             this.movimentoService.excluir(tipoMovimento).subscribe(
                 resposta => {
                     if (resposta.Sucesso) {
-                        this.atualizarLista();
+                        this.atualizarLista(this.globalService.obtemMesAnoAtual());
                     } else {
                         alert(`Erro ao excluir o movimento: ${resposta.Mensagem}`);
                     }
