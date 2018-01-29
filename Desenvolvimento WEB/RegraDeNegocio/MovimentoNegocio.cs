@@ -17,7 +17,8 @@ namespace RegraDeNegocio
 
             if (!c.Codigo.Equals("0"))
             {
-                novo = db.Movimentos.Where(w => w.Codigo.Equals(c.Codigo)).FirstOrDefault();
+                var id = int.Parse(c.Codigo);
+                novo = db.Movimentos.Where(w => w.Codigo.Equals(id)).FirstOrDefault();
                 novo.Descricao = c.Descricao;
                 novo.Data = DateTime.Parse(c.Data);
                 novo.Valor = c.Valor;
@@ -60,7 +61,8 @@ namespace RegraDeNegocio
             {
                 using (var db = DBCore.NovaInstanciaDoBanco())
                 {
-                    var objeto = db.Movimentos.Where(w => w.Codigo.Equals(c.Codigo)).FirstOrDefault();
+                    var id = int.Parse(c.Codigo);
+                    var objeto = db.Movimentos.Where(w => w.Codigo.Equals(id)).FirstOrDefault();
 
                     if (objeto == null)
                     {
@@ -86,7 +88,7 @@ namespace RegraDeNegocio
             {
                 Codigo = c.Codigo.ToString(),
                 Descricao = c.Descricao,
-                Data = c.Data.ToString("yyyy-mm-dd"),
+                Data = c.Data.ToString("yyyy-MM-dd"),
                 Valor = c.Valor,
                 CategoriaCodigo = c.CategoriaCodigo,
                 ContaCodigo = c.CategoriaCodigo,
@@ -182,8 +184,9 @@ namespace RegraDeNegocio
                 .Where
                 (
                     w =>
-                        (w.Data >= DataInicial && w.Data <= DataFinal)
+                        (w.Data <= DataFinal)
                         && (w.Efetivado.Equals("S"))
+                        && w.TipoMovimento.CreditoDebito.Equals("D")
                 )
                 .GroupBy
                 (
@@ -195,19 +198,21 @@ namespace RegraDeNegocio
                     s => new
                     {
                         Categoria = s.Key,
-                        Credito = s.Sum(i => (i.TipoMovimento.CreditoDebito.Equals("C") ? i.Valor : 0)),
-                        Debito = s.Sum(i => (i.TipoMovimento.CreditoDebito.Equals("D") ? i.Valor : 0)),
+                        Debito = s.Sum(i => i.Valor),
+                        Credito = decimal.Zero
                     }
                 )
                 .ToList();
 
             var categorianegocio = new CategoriaNegocio();
             var resposta = new List<ExtratoCategoriaView>();
+            var indice = 1;
 
             foreach (var extrato in registros)
             {
                 resposta.Add(new ExtratoCategoriaView
                 {
+                    Ordem = indice++,
                     Categoria = categorianegocio.ConverteParaView(extrato.Categoria),
                     Debito = extrato.Debito,
                     Credito = extrato.Credito
@@ -215,7 +220,55 @@ namespace RegraDeNegocio
             }
             #endregion
 
-            return null;
+            #region Saldo Anterior
+            decimal? SaldoAnterior = DBCore.InstanciaDoBanco().Movimentos
+                .Where
+                (
+                    w =>
+                        (w.Data <= DateTime.Today)
+                        && w.Efetivado.Equals("S")
+                )
+                .GroupBy(g => 1)
+                .Select(
+                    s => new
+                    {
+                        Valor = s.Sum(su => su.TipoMovimento.CreditoDebito.Equals("C") ? su.Valor : -su.Valor)
+                    }
+                ).SingleOrDefault()?.Valor;
+            #endregion
+
+            #region Resumo Tiles
+            var dash = DBCore.InstanciaDoBanco().Movimentos
+                .Where
+                (
+                    w =>
+                        (w.Data <= DataFinal)
+                        && !w.Efetivado.Equals("S")
+                )
+                .GroupBy(g => 1)
+                .Select
+                (
+                    s => new
+                    {
+                        Credito = s.Sum(i => (i.TipoMovimento.CreditoDebito.Equals("C") ? i.Valor : 0)),
+                        Debito = s.Sum(i => (i.TipoMovimento.CreditoDebito.Equals("D") ? i.Valor : 0)),
+                    }
+                )
+                .SingleOrDefault();
+            #endregion
+
+            var retorno = new DashBoardResumoView
+            {
+                Categorias = resposta,
+                DashBoardResumo = new DashBoardResumo
+                {
+                    DespesasAberto = dash?.Debito ?? 0,
+                    ReceitasAberto = dash?.Credito ?? 0,
+                    SaldoContas = ((SaldoAnterior ?? 0) + (dash?.Credito ?? 0) - (dash?.Debito ?? 0))
+                }
+            };
+
+            return retorno;
         }
     }
 }

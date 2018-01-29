@@ -7,7 +7,7 @@ import { ADSResposta } from '../model/ads-resposta.model';
 export class ServicoBaseService {
 
     private get URL_API(): string {
-        return 'http://192.168.1.1:5051/api/';
+        return 'http://localhost:50173/api/';
     }
 
     private get HEADER(): Headers {

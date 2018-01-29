@@ -39,7 +39,7 @@ namespace WebAPI.Controllers
                 return Ok(new ADSResposta(false, "Nenhum registro encontrado.", resposta));
             }
 
-            return Ok(resposta);
+            return Ok(new ADSResposta(true, objeto: resposta));
         }
 
         [HttpPost]
@@ -58,6 +58,17 @@ namespace WebAPI.Controllers
             MovimentoView objeto = jsonData.SelectToken("Movimento").ToObject<MovimentoView>();
 
             return Ok((new MovimentoNegocio().Excluir(objeto)));
+        }
+
+        [HttpPost]
+        [ActionName("dashboardresumo")]
+        public async Task<IHttpActionResult> DashBoardResumo([FromBody] JObject jsonData)
+        {
+            dynamic json = jsonData;
+            int Mes = json.Mes;
+            int Ano = json.Ano;
+
+            return Ok(new ADSResposta(true, objeto: new MovimentoNegocio().ObtemResumoDashBoard(Mes, Ano)));
         }
     }
 }

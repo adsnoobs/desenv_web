@@ -15,7 +15,8 @@ namespace RegraDeNegocio
 
             if (!c.Codigo.Equals("0"))
             {
-                novo = db.TiposMovimento.Where(w => w.Codigo.Equals(c.Codigo)).FirstOrDefault();
+                var id = int.Parse(c.Codigo);
+                novo = db.TiposMovimento.Where(w => w.Codigo.Equals(id)).FirstOrDefault();
                 novo.Descricao = c.Descricao;
                 novo.CreditoDebito = c.CreditoDebito;
             }
@@ -48,7 +49,8 @@ namespace RegraDeNegocio
             {
                 using (var db = DBCore.NovaInstanciaDoBanco())
                 {
-                    var objeto = db.TiposMovimento.Where(w => w.Codigo.Equals(c.Codigo)).FirstOrDefault();
+                    var id = int.Parse(c.Codigo);
+                    var objeto = db.TiposMovimento.Where(w => w.Codigo.Equals(id)).FirstOrDefault();
 
                     if (objeto == null)
                     {

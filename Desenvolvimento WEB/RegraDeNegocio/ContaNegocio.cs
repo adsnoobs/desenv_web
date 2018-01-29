@@ -18,7 +18,8 @@ namespace RegraDeNegocio
 
             if (!c.Codigo.Equals("0"))
             {
-                novo = db.Contas.Where(w => w.Codigo.Equals(c.Codigo)).FirstOrDefault();
+                var id = int.Parse(c.Codigo);
+                novo = db.Contas.Where(w => w.Codigo.Equals(id)).FirstOrDefault();
                 novo.Descricao = c.Descricao;
             }
             else
@@ -49,7 +50,8 @@ namespace RegraDeNegocio
             {
                 using (var db = DBCore.NovaInstanciaDoBanco())
                 {
-                    var conta = db.Contas.Where(w => w.Codigo.Equals(c.Codigo)).FirstOrDefault();
+                    var id = int.Parse(c.Codigo);
+                    var conta = db.Contas.Where(w => w.Codigo.Equals(id)).FirstOrDefault();
 
                     if (conta == null)
                     {
