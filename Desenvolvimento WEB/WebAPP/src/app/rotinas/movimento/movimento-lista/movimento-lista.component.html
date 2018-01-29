@@ -3,6 +3,9 @@
         <tr>
             <th scope="col">Código</th>
             <th scope="col">Descrição</th>
+            <th scope="col">Categoria</th>
+            <th scope="col">Conta</th>
+            <th scope="col">Tipo</th>
             <th scope="col">Data</th>
             <th scope="col">Valor</th>
             <th scope="col">Ação</th>
@@ -10,15 +13,16 @@
     </thead>
     <tbody>
         <tr *ngIf="!movimentos || movimentos.length === 0">
-            <td colspan="5" style="text-align:center;">
+            <td colspan="8" style="text-align:center;">
                 Não há movimentos cadastrados
             </td>
         </tr>
         <tr *ngFor="let movimento of movimentos">
-            <td>
-                {{ movimento.Codigo }}
-            </td>
+            <td>{{ movimento.Codigo }}</td>
             <td>{{ movimento.Descricao }}</td>
+            <td>{{ movimento.Categoria?.Descricao }}</td>
+            <td>{{ movimento.Conta?.Descricao }}</td>
+            <td>{{ movimento.TipoMovimento?.Descricao }}</td>
             <td>{{ movimento.Data }}</td>
             <td>{{ movimento.Valor }}</td>
             <td>

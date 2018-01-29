@@ -14,17 +14,16 @@ export class MovimentoDetalheResolveService implements Resolve<Movimento> {
         const id = route.params['id'];
         if (id && id !== '') {
             return this.movimentoService.obtemPeloCodigo(id).map(
-                movimento => {
-                    if (movimento) {
-                        return movimento;
+                resposta => {
+                    if (resposta && resposta.Sucesso && resposta.Objeto) {
+                        return resposta.Objeto as Movimento;
                     } else {
-                        this.router.navigate(['movimento']);
-                        return null;
+                        throw new Error(resposta.Mensagem);
                     }
                 }
             ).toPromise()
                 .catch(error => {
-                    this.router.navigate(['movimento']);
+                    this.router.navigate(['conta']);
                     return null;
                 });
         } else {

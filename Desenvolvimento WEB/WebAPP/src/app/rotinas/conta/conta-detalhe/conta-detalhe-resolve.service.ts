@@ -14,12 +14,11 @@ export class ContaDetalheResolveService implements Resolve<Conta> {
         const id = route.params['id'];
         if (id && id !== '') {
             return this.contaService.obtemPeloCodigo(id).map(
-                conta => {
-                    if (conta) {
-                        return conta;
+                resposta => {
+                    if (resposta && resposta.Sucesso && resposta.Objeto) {
+                        return resposta.Objeto as Conta;
                     } else {
-                        this.router.navigate(['conta']);
-                        return null;
+                        throw new Error(resposta.Mensagem);
                     }
                 }
             ).toPromise()

@@ -12,39 +12,27 @@ export class CategoriaService extends ServicoBaseService {
         super(http);
     }
 
-    public obtemPeloCodigo(codigo: string): Observable<Categoria> {
-        return new Observable<Categoria>(
-            observer => {
-                observer.next(this.obtemPeloCodigoLocal<Categoria>('Categoria', 'Codigo', codigo));
-                observer.complete();
-            }
-        );
+    public obtemPeloCodigo(codigo: string): Observable<ADSResposta> {
+        return this.obtemDadosPost<ADSResposta>('categoria/obtemporcodigo', { Codigo: codigo });
     }
 
     public obtemLista(): Observable<Categoria[]> {
-        return new Observable<Categoria[]>(
-            observer => {
-                observer.next(this.obtemListaLocal<Categoria>('Categoria'));
-                observer.complete();
+        return this.obtemDadosPost<ADSResposta>('categoria/obtem').map(
+            m => {
+                if (m.Sucesso) {
+                    return m.Objeto as Categoria[];
+                } else {
+                    return [];
+                }
             }
         );
     }
 
     public excluir(categoria: Categoria): Observable<ADSResposta> {
-        return new Observable<ADSResposta>(
-            observer => {
-                observer.next(this.excluirDaListaLocal<Categoria>('Categoria', categoria, 'Codigo'));
-                observer.complete();
-            }
-        );
+        return this.enviarComandoPost('categoria/excluir', { Categoria: categoria });
     }
 
     public salvar(categoria: Categoria): Observable<ADSResposta> {
-        return new Observable<ADSResposta>(
-            observer => {
-                observer.next(this.salvarNaListaLocal<Categoria>('Categoria', categoria, 'Codigo'));
-                observer.complete();
-            }
-        );
+        return this.enviarComandoPost('categoria/salvar', { Categoria: categoria });
     }
 }

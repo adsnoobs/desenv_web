@@ -19,7 +19,6 @@ import { MovimentoModule } from './rotinas/movimento/movimento.module';
 import { TipoMovimentoModule } from './rotinas/tipo-movimento/tipo-movimento.module';
 import { NavegacaoService } from './shared/service/navegacao.service';
 import { GlobalService } from './shared/service/global-variaveis.service';
-import { DashboardService } from './shared/service/dashboard.service';
 import { MesAnoService } from './shared/service/mes-ano.service';
 import { LoginService } from './shared/service/login.service';
 
@@ -47,7 +46,6 @@ import { LoginService } from './shared/service/login.service';
     TipoMovimentoService,
     NavegacaoService,
     GlobalService,
-    DashboardService,
     MesAnoService,
     LoginService
   ],

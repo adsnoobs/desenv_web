@@ -14,17 +14,16 @@ export class TipoMovimentoDetalheResolveService implements Resolve<TipoMovimento
         const id = route.params['id'];
         if (id && id !== '') {
             return this.tipoMovimentoService.obtemPeloCodigo(id).map(
-                tipoMovimento => {
-                    if (tipoMovimento) {
-                        return tipoMovimento;
+                resposta => {
+                    if (resposta && resposta.Sucesso && resposta.Objeto) {
+                        return resposta.Objeto as TipoMovimento;
                     } else {
-                        this.router.navigate(['tipomovimento']);
-                        return null;
+                        throw new Error(resposta.Mensagem);
                     }
                 }
             ).toPromise()
                 .catch(error => {
-                    this.router.navigate(['tipomovimento']);
+                    this.router.navigate(['conta']);
                     return null;
                 });
         } else {

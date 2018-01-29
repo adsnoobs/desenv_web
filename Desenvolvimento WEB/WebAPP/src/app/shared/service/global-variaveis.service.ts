@@ -17,8 +17,10 @@ export class GlobalService {
     public paginaInteira$ = this.paginaInteiraSource.asObservable();
 
     public atualizaNavegacaoAtual(navegacaoAtual: string) {
-        this.navegacaoAtual = navegacaoAtual;
-        this.navegacaoAtualSource.next(navegacaoAtual);
+        setTimeout(() => {
+            this.navegacaoAtual = navegacaoAtual;
+            this.navegacaoAtualSource.next(navegacaoAtual);
+        });
     }
 
     public atualizaMesAnoAtual(mesAnoAtual?: MesAno) {

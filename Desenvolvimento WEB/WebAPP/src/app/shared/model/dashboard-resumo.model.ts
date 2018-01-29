@@ -1,6 +1,6 @@
 import { MesAno } from './mes-ano.model';
 
-export class DashboardResumo {
+export class DashBoardResumo {
     DespesasAberto: number;
     ReceitasAberto: number;
     SaldoContas: number;

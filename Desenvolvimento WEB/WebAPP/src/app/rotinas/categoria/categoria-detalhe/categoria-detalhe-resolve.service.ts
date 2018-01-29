@@ -14,12 +14,11 @@ export class CategoriaDetalheResolveService implements Resolve<Categoria> {
         const id = route.params['id'];
         if (id && id !== '') {
             return this.categoriaService.obtemPeloCodigo(id).map(
-                categoria => {
-                    if (categoria) {
-                        return categoria;
+                resposta => {
+                    if (resposta && resposta.Sucesso && resposta.Objeto) {
+                        return resposta.Objeto as Categoria;
                     } else {
-                        this.router.navigate(['categoria']);
-                        return null;
+                        throw new Error(resposta.Mensagem);
                     }
                 }
             ).toPromise()

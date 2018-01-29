@@ -12,39 +12,27 @@ export class TipoMovimentoService extends ServicoBaseService {
         super(http);
     }
 
-    public obtemPeloCodigo(codigo: string): Observable<TipoMovimento> {
-        return new Observable<TipoMovimento>(
-            observer => {
-                observer.next(this.obtemPeloCodigoLocal<TipoMovimento>('TipoMovimento', 'Codigo', codigo));
-                observer.complete();
-            }
-        );
+    public obtemPeloCodigo(codigo: string): Observable<ADSResposta> {
+        return this.obtemDadosPost<ADSResposta>('tipomovimento/obtemporcodigo', { Codigo: codigo });
     }
 
     public obtemLista(): Observable<TipoMovimento[]> {
-        return new Observable<TipoMovimento[]>(
-            observer => {
-                observer.next(this.obtemListaLocal<TipoMovimento>('TipoMovimento'));
-                observer.complete();
+        return this.obtemDadosPost<ADSResposta>('tipomovimento/obtem').map(
+            m => {
+                if (m.Sucesso) {
+                    return m.Objeto as TipoMovimento[];
+                } else {
+                    return [];
+                }
             }
         );
     }
 
     public excluir(tipoMovimento: TipoMovimento): Observable<ADSResposta> {
-        return new Observable<ADSResposta>(
-            observer => {
-                observer.next(this.excluirDaListaLocal<TipoMovimento>('TipoMovimento', tipoMovimento, 'Codigo'));
-                observer.complete();
-            }
-        );
+        return this.enviarComandoPost('tipomovimento/excluir', { TipoMovimento: tipoMovimento });
     }
 
     public salvar(tipoMovimento: TipoMovimento): Observable<ADSResposta> {
-        return new Observable<ADSResposta>(
-            observer => {
-                observer.next(this.salvarNaListaLocal<TipoMovimento>('TipoMovimento', tipoMovimento, 'Codigo'));
-                observer.complete();
-            }
-        );
+        return this.enviarComandoPost('tipomovimento/salvar', { TipoMovimento: tipoMovimento });
     }
 }
