@@ -127,5 +127,95 @@ namespace RegraDeNegocio
 
             return resposta;
         }
+
+        public List<ExtratoCategoriaView> ExtratoCategoria(DateTime dataBase, bool efetivados = true)
+        {
+            var DataInicial = new DateTime(dataBase.Year, dataBase.Month, 1);
+            var DataFinal = DataInicial.AddMonths(1).AddDays(-1);
+
+            var registros = DBCore.InstanciaDoBanco().Movimentos
+                .Where
+                (
+                    w =>
+                        (w.Data >= DataInicial && w.Data <= DataFinal)
+                        && (w.Efetivado.Equals("S") || !efetivados)
+                )
+                .GroupBy
+                (
+                    g =>
+                        g.Categoria
+                )
+                .Select
+                (
+                    s => new
+                    {
+                        Categoria = s.Key,
+                        Credito = s.Sum(i => (i.TipoMovimento.CreditoDebito.Equals("C") ? i.Valor : 0)),
+                        Debito = s.Sum(i => (i.TipoMovimento.CreditoDebito.Equals("D") ? i.Valor : 0)),
+                    }
+                )
+                .ToList();
+
+            var categorianegocio = new CategoriaNegocio();
+            var resposta = new List<ExtratoCategoriaView>();
+
+            foreach(var extrato in registros)
+            {
+                resposta.Add(new ExtratoCategoriaView
+                {
+                    Categoria = categorianegocio.ConverteParaView(extrato.Categoria),
+                    Debito = extrato.Debito,
+                    Credito = extrato.Credito
+                });
+            }
+
+            return resposta;
+        }
+
+        public DashBoardResumoView ObtemResumoDashBoard(int Mes, int Ano)
+        {
+            var DataInicial = new DateTime(Ano, Mes, 1);
+            var DataFinal = DataInicial.AddMonths(1).AddDays(-1);
+
+            #region Resumo por Categoria
+            var registros = DBCore.InstanciaDoBanco().Movimentos
+                .Where
+                (
+                    w =>
+                        (w.Data >= DataInicial && w.Data <= DataFinal)
+                        && (w.Efetivado.Equals("S"))
+                )
+                .GroupBy
+                (
+                    g =>
+                        g.Categoria
+                )
+                .Select
+                (
+                    s => new
+                    {
+                        Categoria = s.Key,
+                        Credito = s.Sum(i => (i.TipoMovimento.CreditoDebito.Equals("C") ? i.Valor : 0)),
+                        Debito = s.Sum(i => (i.TipoMovimento.CreditoDebito.Equals("D") ? i.Valor : 0)),
+                    }
+                )
+                .ToList();
+
+            var categorianegocio = new CategoriaNegocio();
+            var resposta = new List<ExtratoCategoriaView>();
+
+            foreach (var extrato in registros)
+            {
+                resposta.Add(new ExtratoCategoriaView
+                {
+                    Categoria = categorianegocio.ConverteParaView(extrato.Categoria),
+                    Debito = extrato.Debito,
+                    Credito = extrato.Credito
+                });
+            }
+            #endregion
+
+            return null;
+        }
     }
 }
