@@ -53,6 +53,7 @@
     <Compile Include="CategoriaNegocio.cs" />
     <Compile Include="ContaNegocio.cs" />
     <Compile Include="DBCore.cs" />
+    <Compile Include="MovimentoNegocio.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TipoMovimentoNegocio.cs" />
   </ItemGroup>

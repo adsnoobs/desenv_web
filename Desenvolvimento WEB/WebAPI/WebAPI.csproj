@@ -161,6 +161,7 @@
     <Compile Include="Controllers\CategoriaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ContaController.cs" />
+    <Compile Include="Controllers\MovimentoController.cs" />
     <Compile Include="Controllers\TipoMovimentoController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

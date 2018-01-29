@@ -58,6 +58,7 @@
     <Compile Include="View\ADSResposta.cs" />
     <Compile Include="View\CategoriaView.cs" />
     <Compile Include="View\ContaView.cs" />
+    <Compile Include="View\MovimentoView.cs" />
     <Compile Include="View\TipoMovimentoView.cs" />
   </ItemGroup>
   <ItemGroup>
