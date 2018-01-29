@@ -31,7 +31,8 @@ const rotasTipoMovimento: Routes = [
             },
             {
                 path: '',
-                component: TipoMovimentoListaComponent
+                component: TipoMovimentoListaComponent,
+                canActivate: [ CanActivateGuardService ]
             }
         ]
     },

@@ -31,7 +31,8 @@ const rotasCategoria: Routes = [
             },
             {
                 path: '',
-                component: CategoriaListaComponent
+                component: CategoriaListaComponent,
+                canActivate: [ CanActivateGuardService ]
             }
         ]
     },

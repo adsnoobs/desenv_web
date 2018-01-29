@@ -1,8 +1,10 @@
-import { RouterModule, Routes} from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 
+import { LoginComponent } from './components/login/login.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { Erro404Component } from './components/erro404/erro404.component';
+import { CanActivateGuardService } from './shared/service/can-activate-guard.service';
 
 const rotas: Routes = [
     {
@@ -12,7 +14,8 @@ const rotas: Routes = [
     },
     {
         path: 'dashboard',
-        component: DashboardComponent
+        component: DashboardComponent,
+        canActivate: [CanActivateGuardService]
     },
     {
         path: 'conta',
@@ -31,13 +34,18 @@ const rotas: Routes = [
         loadChildren: 'app/rotinas/movimento/movimento.module#MovimentoModule'
     },
     {
+        path: 'login',
+        component: LoginComponent
+    },
+    {
         path: '**',
         component: Erro404Component
     }
 ];
 
 @NgModule({
-    imports: [ RouterModule.forRoot(rotas) ],
-    exports: [ RouterModule ]
+    imports: [RouterModule.forRoot(rotas)],
+    exports: [RouterModule],
+    providers: [ CanActivateGuardService ]
 })
 export class AppRoutingModule { }

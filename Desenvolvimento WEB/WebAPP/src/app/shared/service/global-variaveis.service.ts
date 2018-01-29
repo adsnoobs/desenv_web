@@ -8,10 +8,13 @@ export class GlobalService {
 
     private navegacaoAtual: string;
     private mesAnoAtual: MesAno;
+    private paginaInteira: boolean;
     private navegacaoAtualSource = new Subject<string>();
     private mesAnoAtualSource = new Subject<MesAno>();
+    private paginaInteiraSource = new Subject<boolean>();
     public navegacaoAtual$ = this.navegacaoAtualSource.asObservable();
     public mesAnoAtual$ = this.mesAnoAtualSource.asObservable();
+    public paginaInteira$ = this.paginaInteiraSource.asObservable();
 
     public atualizaNavegacaoAtual(navegacaoAtual: string) {
         this.navegacaoAtual = navegacaoAtual;
@@ -23,8 +26,17 @@ export class GlobalService {
         this.mesAnoAtualSource.next(mesAnoAtual);
     }
 
+    public atualizaPaginaInteira(paginaInteira: boolean) {
+        this.paginaInteira = paginaInteira;
+        this.paginaInteiraSource.next(paginaInteira);
+    }
+
     public obtemMesAnoAtual() {
         return this.mesAnoAtual;
+    }
+
+    public obtemPaginaInteira() {
+        return this.paginaInteira;
     }
 
 }

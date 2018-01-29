@@ -21,6 +21,7 @@ import { NavegacaoService } from './shared/service/navegacao.service';
 import { GlobalService } from './shared/service/global-variaveis.service';
 import { DashboardService } from './shared/service/dashboard.service';
 import { MesAnoService } from './shared/service/mes-ano.service';
+import { LoginService } from './shared/service/login.service';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { MesAnoService } from './shared/service/mes-ano.service';
     NavegacaoService,
     GlobalService,
     DashboardService,
-    MesAnoService
+    MesAnoService,
+    LoginService
   ],
   bootstrap: [AppComponent]
 })
