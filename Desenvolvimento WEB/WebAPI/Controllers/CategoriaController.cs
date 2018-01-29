@@ -34,7 +34,7 @@ namespace WebAPI.Controllers
                 return Ok(new ADSResposta(false, "Nenhum registro encontrado.", resposta));
             }
 
-            return Ok(resposta);
+            return Ok(new ADSResposta(true, "", resposta));
         }
 
         [HttpPost]

@@ -13,9 +13,10 @@ namespace RegraDeNegocio
 
             Categoria novo = null;
 
-            if (c.Codigo != 0)
+            if (!c.Codigo.Equals("0"))
             {
-                novo = db.Categorias.Where(w => w.Codigo.Equals(c.Codigo)).FirstOrDefault();
+                var id = int.Parse(c.Codigo);
+                novo = db.Categorias.Where(w => w.Codigo.Equals(id)).FirstOrDefault();
                 novo.Descricao = c.Descricao;
             }
             else
@@ -30,7 +31,7 @@ namespace RegraDeNegocio
             {
                 db.SaveChanges();
 
-                c.Codigo = novo.Codigo;
+                c.Codigo = novo.Codigo.ToString();
 
                 return new ADSResposta(true, objeto: c);
             }
@@ -46,7 +47,8 @@ namespace RegraDeNegocio
             {
                 using (var db = DBCore.NovaInstanciaDoBanco())
                 {
-                    var conta = db.Categorias.Where(w => w.Codigo.Equals(c.Codigo)).FirstOrDefault();
+                    var id = int.Parse(c.Codigo);
+                    var conta = db.Categorias.Where(w => w.Codigo.Equals(id)).FirstOrDefault();
 
                     if (conta == null)
                     {
@@ -66,6 +68,15 @@ namespace RegraDeNegocio
             }
         }
 
+        public CategoriaView ConverteParaView(Categoria c)
+        {
+            return new CategoriaView
+            {
+                Codigo = c.Codigo.ToString(),
+                Descricao = c.Descricao
+            };
+        }
+
         public List<CategoriaView> PegaTodas()
         {
             var contas = DBCore.InstanciaDoBanco().Categorias.ToList();
@@ -73,11 +84,7 @@ namespace RegraDeNegocio
             var resposta = new List<CategoriaView>();
             foreach (var c in contas)
             {
-                resposta.Add(new CategoriaView
-                {
-                    Codigo = c.Codigo,
-                    Descricao = c.Descricao
-                });
+                resposta.Add(ConverteParaView(c));
             }
 
             return resposta;
@@ -93,11 +100,7 @@ namespace RegraDeNegocio
 
             if (conta != null)
             {
-                resposta = new CategoriaView
-                {
-                    Codigo = conta.Codigo,
-                    Descricao = conta.Descricao
-                };
+                resposta = ConverteParaView(conta);
             }
 
             return resposta;

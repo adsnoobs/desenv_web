@@ -16,9 +16,10 @@ namespace RegraDeNegocio
 
             Conta novo = null;
 
-            if (c.Codigo != 0)
+            if (!c.Codigo.Equals("0"))
             {
-                novo = db.Contas.Where(w => w.Codigo.Equals(c.Codigo)).FirstOrDefault();
+                var id = int.Parse(c.Codigo);
+                novo = db.Contas.Where(w => w.Codigo.Equals(id)).FirstOrDefault();
                 novo.Descricao = c.Descricao;
             }
             else
@@ -33,7 +34,7 @@ namespace RegraDeNegocio
             {
                 db.SaveChanges();
 
-                c.Codigo = novo.Codigo;
+                c.Codigo = novo.Codigo.ToString();
 
                 return new ADSResposta(true, "", c);
             }
@@ -49,7 +50,8 @@ namespace RegraDeNegocio
             {
                 using (var db = DBCore.NovaInstanciaDoBanco())
                 {
-                    var conta = db.Contas.Where(w => w.Codigo.Equals(c.Codigo)).FirstOrDefault();
+                    var id = int.Parse(c.Codigo);
+                    var conta = db.Contas.Where(w => w.Codigo.Equals(id)).FirstOrDefault();
 
                     if (conta == null)
                     {
@@ -69,6 +71,15 @@ namespace RegraDeNegocio
             }
         }
 
+        public ContaView ConverteParaView(Conta c)
+        {
+            return new ContaView
+            {
+                Codigo = c.Codigo.ToString(),
+                Descricao = c.Descricao
+            };
+        }
+
         public List<ContaView> PegaTodas()
         {
             var contas = DBCore.InstanciaDoBanco().Contas.ToList();
@@ -76,11 +87,7 @@ namespace RegraDeNegocio
             var resposta = new List<ContaView>();
             foreach(var c in contas)
             {
-                resposta.Add(new ContaView
-                {
-                    Codigo = c.Codigo,
-                    Descricao = c.Descricao
-                });
+                resposta.Add(ConverteParaView(c));
             }
 
             return resposta;
@@ -96,11 +103,7 @@ namespace RegraDeNegocio
 
             if (conta != null)
             {
-                resposta = new ContaView
-                {
-                    Codigo = conta.Codigo,
-                    Descricao = conta.Descricao
-                };
+                resposta = ConverteParaView(conta);
             }
 
             return resposta;

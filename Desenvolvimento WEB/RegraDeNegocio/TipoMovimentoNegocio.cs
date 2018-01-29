@@ -13,9 +13,10 @@ namespace RegraDeNegocio
 
             TipoMovimento novo = null;
 
-            if (c.Codigo != 0)
+            if (!c.Codigo.Equals("0"))
             {
-                novo = db.TiposMovimento.Where(w => w.Codigo.Equals(c.Codigo)).FirstOrDefault();
+                var id = int.Parse(c.Codigo);
+                novo = db.TiposMovimento.Where(w => w.Codigo.Equals(id)).FirstOrDefault();
                 novo.Descricao = c.Descricao;
                 novo.CreditoDebito = c.CreditoDebito;
             }
@@ -32,7 +33,7 @@ namespace RegraDeNegocio
             {
                 db.SaveChanges();
 
-                c.Codigo = novo.Codigo;
+                c.Codigo = novo.Codigo.ToString();
 
                 return new ADSResposta(true, objeto: c);
             }
@@ -48,7 +49,8 @@ namespace RegraDeNegocio
             {
                 using (var db = DBCore.NovaInstanciaDoBanco())
                 {
-                    var objeto = db.TiposMovimento.Where(w => w.Codigo.Equals(c.Codigo)).FirstOrDefault();
+                    var id = int.Parse(c.Codigo);
+                    var objeto = db.TiposMovimento.Where(w => w.Codigo.Equals(id)).FirstOrDefault();
 
                     if (objeto == null)
                     {
@@ -68,6 +70,16 @@ namespace RegraDeNegocio
             }
         }
 
+        public TipoMovimentoView ConverteParaView(TipoMovimento c)
+        {
+            return new TipoMovimentoView
+            {
+                Codigo = c.Codigo.ToString(),
+                Descricao = c.Descricao,
+                CreditoDebito = c.CreditoDebito
+            };
+        }
+
         public List<TipoMovimentoView> PegaTodas()
         {
             var objetos = DBCore.InstanciaDoBanco().TiposMovimento.ToList();
@@ -75,12 +87,7 @@ namespace RegraDeNegocio
             var resposta = new List<TipoMovimentoView>();
             foreach (var c in objetos)
             {
-                resposta.Add(new TipoMovimentoView
-                {
-                    Codigo = c.Codigo,
-                    Descricao = c.Descricao,
-                    CreditoDebito = c.CreditoDebito
-                });
+                resposta.Add(ConverteParaView(c));
             }
 
             return resposta;
@@ -96,12 +103,7 @@ namespace RegraDeNegocio
 
             if (objeto != null)
             {
-                resposta = new TipoMovimentoView
-                {
-                    Codigo = objeto.Codigo,
-                    Descricao = objeto.Descricao,
-                    CreditoDebito = objeto.CreditoDebito
-                };
+                resposta = ConverteParaView(objeto);
             }
 
             return resposta;
